@@ -15,6 +15,27 @@ public class ByteBuffTest {
         //写入内容，写入int类型后，写指针增加四个字节
         buffer.writeInt(1);
         print("writeInt(1)",buffer);
+        //写完后的写指针等于capacity,此时不可写
+        buffer.writeBytes(new byte[]{5});
+        print("writeBytes(new byte[]{5})",buffer);
+        //写的时候发现不可写，则开始扩容，capacity改变
+        buffer.writeBytes(new byte[]{6});
+        print("writeBytes(new byte[]{6})",buffer);
+
+        //get方法不改写读写指针
+        System.out.println("getByte(3) return:"+buffer.getByte(3));
+        System.out.println("getShort(3) return:"+buffer.getShort(3));
+        System.out.println("getInt(3) return:"+buffer.getInt(3));
+        print("getbyte()",buffer);
+
+        // set 方法不改变读写指针
+        buffer.setByte(buffer.readableBytes() + 1, 0);
+        print("setByte()", buffer);
+
+        // read 方法改变读指针
+        byte[] dst = new byte[buffer.readableBytes()];
+        buffer.readBytes(dst);
+        print("readBytes(" + dst.length + ")", buffer);
     }
     private static void print(String action, ByteBuf buffer) {
         System.out.println("after ===========" + action + "============");
