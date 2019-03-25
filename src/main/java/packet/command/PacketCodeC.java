@@ -2,9 +2,8 @@ package packet.command;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import packet.command.Command;
-import packet.command.Packet;
 import packet.message.LoginRequestPacket;
+import packet.message.LoginResponsePacket;
 import packet.serialize.JSONSerializer;
 import packet.serialize.Serializer;
 
@@ -13,14 +12,14 @@ import java.util.Map;
 
 public class PacketCodeC {
     private static final int MAGIC_NUMBER=0x12345678;
-
+    public static final PacketCodeC INSTANCE=new PacketCodeC();
     private static final Map<Byte, Class<? extends Packet>> packetTypeMap;
     private static final Map<Byte, Serializer> serializerMap;
     //初始化
     static {
         packetTypeMap = new HashMap<Byte, Class<? extends Packet>>();
         packetTypeMap.put(Command.LOGIN, LoginRequestPacket.class);
-
+        packetTypeMap.put(Command.LOGINRESPONSE, LoginResponsePacket.class);
         serializerMap = new HashMap<Byte, Serializer>();
         Serializer serializer = new JSONSerializer();
         serializerMap.put(serializer.getSerializerAlgorithm(), serializer);
@@ -29,6 +28,22 @@ public class PacketCodeC {
     public ByteBuf encode(Packet packet){
         //1.创建bytebuf对象
         ByteBuf byteBuf= ByteBufAllocator.DEFAULT.ioBuffer();
+        //2.序列化java对象
+        byte[] bytes=Serializer.DEFAULT.serialize(packet);
+        //3.写入
+        byteBuf.writeInt(MAGIC_NUMBER);
+        byteBuf.writeByte(packet.version);
+        byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
+        byteBuf.writeByte(packet.getCommand());
+        byteBuf.writeInt(bytes.length);
+        byteBuf.writeBytes(bytes);
+        return byteBuf;
+
+    }
+    //编码
+    public ByteBuf encode(ByteBufAllocator byteBufAllocator,Packet packet){
+        //1.创建bytebuf对象
+        ByteBuf byteBuf= byteBufAllocator.ioBuffer();
         //2.序列化java对象
         byte[] bytes=Serializer.DEFAULT.serialize(packet);
         //3.写入
