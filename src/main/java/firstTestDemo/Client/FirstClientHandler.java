@@ -1,4 +1,4 @@
-package testDemo.Client;
+package firstTestDemo.Client;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

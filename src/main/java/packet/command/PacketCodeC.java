@@ -4,6 +4,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import packet.message.LoginRequestPacket;
 import packet.message.LoginResponsePacket;
+import packet.message.MessageRequestPacket;
+import packet.message.MessageResponsePacket;
 import packet.serialize.JSONSerializer;
 import packet.serialize.Serializer;
 
@@ -18,8 +20,12 @@ public class PacketCodeC {
     //初始化
     static {
         packetTypeMap = new HashMap<Byte, Class<? extends Packet>>();
+        //注册协议
         packetTypeMap.put(Command.LOGIN, LoginRequestPacket.class);
         packetTypeMap.put(Command.LOGINRESPONSE, LoginResponsePacket.class);
+        packetTypeMap.put(Command.MESSAGEREQUEST, MessageRequestPacket.class);
+        packetTypeMap.put(Command.MESSAGERESPONSE, MessageResponsePacket.class);
+
         serializerMap = new HashMap<Byte, Serializer>();
         Serializer serializer = new JSONSerializer();
         serializerMap.put(serializer.getSerializerAlgorithm(), serializer);

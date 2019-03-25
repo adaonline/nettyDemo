@@ -1,4 +1,4 @@
-package testDemo.Server;
+package firstTestDemo.Server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;

@@ -1,14 +1,20 @@
 package login.client;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import packet.command.PacketCodeC;
+import packet.message.MessageRequestPacket;
 
 import java.util.Date;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Client {
@@ -38,6 +44,7 @@ public class Client {
             public void operationComplete(Future<? super Void> future) throws Exception {
                 if (future.isSuccess()) {
                     System.out.println("连接成功!");
+                    Client.startConsoleThread(((ChannelFuture)future).channel());
                 }else if (retry == 0) {
                     System.err.println("重试次数已用完，放弃连接！");
                 } else {
@@ -51,5 +58,41 @@ public class Client {
                 }
             }
         });
+    }
+
+    private static void startConsoleThread(Channel channel){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.interrupted()){
+                    if(LoginUtil.hasLogin(channel)){
+                        System.out.println("输入消息到服务端:");
+                        Scanner sc=new Scanner(System.in);
+                        String line =sc.nextLine();
+
+                        MessageRequestPacket packet=new MessageRequestPacket();
+                        packet.setMessage(line);
+                        ByteBuf byteBuf= PacketCodeC.INSTANCE.encode(channel.alloc(),packet);
+                        channel.writeAndFlush(byteBuf);
+                    }
+                }
+            }
+        }).start();
+    }
+
+    private static void autoSend(Channel channel){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true){
+                    if(LoginUtil.hasLogin(channel)){
+                        MessageRequestPacket packet=new MessageRequestPacket();
+                        packet.setMessage(System.currentTimeMillis()+"");
+                        ByteBuf byteBuf= PacketCodeC.INSTANCE.encode(channel.alloc(),packet);
+                        channel.writeAndFlush(byteBuf);
+                    }
+                }
+            }
+        }).start();
     }
 }

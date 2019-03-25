@@ -7,6 +7,10 @@ import packet.command.Packet;
 import packet.command.PacketCodeC;
 import packet.message.LoginRequestPacket;
 import packet.message.LoginResponsePacket;
+import packet.message.MessageRequestPacket;
+import packet.message.MessageResponsePacket;
+
+import java.util.Date;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
     //收到数据后会回调，channelRead
@@ -27,6 +31,13 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             }
             ByteBuf byteBuf=PacketCodeC.INSTANCE.encode(ctx.alloc(),loginResponsePacket);
             ctx.channel().writeAndFlush(byteBuf);
+        }else if(packet instanceof MessageRequestPacket){
+            MessageRequestPacket messageRequestPacket=(MessageRequestPacket)packet;
+            System.out.println("["+new Date()+"]收到客户端消息:"+messageRequestPacket.getMessage());
+            MessageResponsePacket messageResponsePacket=new MessageResponsePacket();
+            messageResponsePacket.setMessage("服务端回复内容["+messageRequestPacket.getMessage()+"]");
+            ByteBuf responseBytebuf=PacketCodeC.INSTANCE.encode(ctx.alloc(),messageResponsePacket);
+            ctx.channel().writeAndFlush(responseBytebuf);
         }
     }
     public boolean check(Packet packet){
