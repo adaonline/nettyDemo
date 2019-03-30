@@ -30,7 +30,7 @@ public class FirstClientHandler extends ChannelInboundHandlerAdapter {
 
         return buffer;
     }
-
+    //读取到数据时候
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         ByteBuf byteBuf = (ByteBuf) msg;

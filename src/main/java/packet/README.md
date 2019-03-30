@@ -1,0 +1,6 @@
+command包下定义了协议id，还有协议的序列化，反序列化工具。其中packetCodeC中定义了协议的序列化顺序规则
+
+message下是不同的协议定义
+
+serialize是序列化的基础工具
+

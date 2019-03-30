@@ -2,7 +2,7 @@ package bytebuf;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-
+//netty中bytebuf的例子
 public class ByteBuffTest {
     public static void main(String[] args) {
         //初始一个长度为9，最大长度为100的buf
