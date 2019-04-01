@@ -62,6 +62,21 @@ public class PacketCodeC {
         return byteBuf;
 
     }
+    //编码
+    public ByteBuf encode(ByteBuf byteBuf,Packet packet){
+
+        //2.序列化java对象
+        byte[] bytes=Serializer.DEFAULT.serialize(packet);
+        //3.写入
+        byteBuf.writeInt(MAGIC_NUMBER);
+        byteBuf.writeByte(packet.version);
+        byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
+        byteBuf.writeByte(packet.getCommand());
+        byteBuf.writeInt(bytes.length);
+        byteBuf.writeBytes(bytes);
+        return byteBuf;
+
+    }
     //解码
     public Packet decode(ByteBuf byteBuf){
         //跳过MAGIC_NUMBER

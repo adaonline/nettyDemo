@@ -6,6 +6,13 @@ import packet.command.Packet;
 public class MessageRequestPacket extends Packet {
     private String message;
 
+    public MessageRequestPacket() {
+    }
+
+    public MessageRequestPacket(String message) {
+        this.message = message;
+    }
+
     public String getMessage() {
         return message;
     }

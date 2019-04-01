@@ -1,0 +1,1 @@
+实现了pip链的确定包类型功能，采用了SimpleChannelInboundHandler，实现了自动编码解码，采用MessageToByteEncoder
