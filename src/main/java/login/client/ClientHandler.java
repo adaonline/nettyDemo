@@ -50,4 +50,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
             System.out.println("["+new Date()+"]客户端收到服务端消息："+messageResponsePacket.getMessage());
         }
     }
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        System.out.println("客户端连接被关闭!");
+    }
 }
