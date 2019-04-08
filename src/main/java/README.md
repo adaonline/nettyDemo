@@ -7,3 +7,4 @@
 6. [piplineDemo] 责任链的相关实例，默认编码解码器，自动判断包类型
 7. [frameDecoder] 拆包粘包相关，破碎包现象的结局办法
 8. [hanlderLife] channelHandler的生命周期
+9. [loginCheckInject] handler热拔插实现登录身份校验一次
