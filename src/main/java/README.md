@@ -8,3 +8,4 @@
 7. [frameDecoder] 拆包粘包相关，破碎包现象的结局办法
 8. [hanlderLife] channelHandler的生命周期
 9. [loginCheckInject] handler热拔插实现登录身份校验一次
+10. [singnalToSignal] 单对单聊天的实现

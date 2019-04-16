@@ -8,6 +8,7 @@ import packet.message.MessageRequestPacket;
 import packet.message.MessageResponsePacket;
 import packet.serialize.JSONSerializer;
 import packet.serialize.Serializer;
+import singnalToSignal.message.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,12 @@ public class PacketCodeC {
         packetTypeMap.put(Command.MESSAGEREQUEST, MessageRequestPacket.class);
         packetTypeMap.put(Command.MESSAGERESPONSE, MessageResponsePacket.class);
 
+
+        packetTypeMap.put(Command.One2OneLoginRequest, One2One_LoginRequest.class);
+        packetTypeMap.put(Command.One2OneLoginResponse, One2One_LoginResponse.class);
+        packetTypeMap.put(Command.One2OneMessageRequest, One2One_MessageRequest.class);
+        packetTypeMap.put(Command.One2OneMessageResponse, One2One_MessageResponse.class);
+        packetTypeMap.put(Command.One2OneMessageResult, One2OneMessageResult.class);
         serializerMap = new HashMap<Byte, Serializer>();
         Serializer serializer = new JSONSerializer();
         serializerMap.put(serializer.getSerializerAlgorithm(), serializer);

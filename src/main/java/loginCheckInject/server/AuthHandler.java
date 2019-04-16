@@ -3,7 +3,7 @@ package loginCheckInject.server;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import login.client.LoginUtil;
-
+//热拔插handler，对每个channel只进行一次检验
 public class AuthHandler extends ChannelInboundHandlerAdapter{
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {

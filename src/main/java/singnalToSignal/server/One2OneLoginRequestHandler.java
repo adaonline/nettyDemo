@@ -2,31 +2,36 @@ package singnalToSignal.server;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import login.client.LoginUtil;
-import packet.message.LoginRequestPacket;
-import packet.message.LoginResponsePacket;
+import singnalToSignal.message.One2One_LoginRequest;
+import singnalToSignal.message.One2One_LoginResponse;
+import singnalToSignal.session.Session;
+import singnalToSignal.session.SessionUtil;
 
-import java.util.Date;
-
-public class One2OneLoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
+public class One2OneLoginRequestHandler extends SimpleChannelInboundHandler<One2One_LoginRequest> {
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket loginRequestPacket) throws Exception {
-        System.out.println(new Date()+"：收到客户端登录请求...");
-        LoginResponsePacket loginResponsePacket=new LoginResponsePacket();
-        if(valid(loginRequestPacket)){
-            loginResponsePacket.setSuccess(true);
-            System.out.println(new Date()+":登录成功！");
-            LoginUtil.markAsLogin(ctx.channel());
-        }else{
-            loginResponsePacket.setReason("账号密码错误");
-            loginResponsePacket.setSuccess(false);
-            System.out.println(new Date()+" 登录失败");
-
+    protected void channelRead0(ChannelHandlerContext ctx, One2One_LoginRequest request) throws Exception {
+        One2One_LoginResponse response=new One2One_LoginResponse();
+        response.setUserName(request.getUsername());
+        if(vaild(request)){
+            response.setLoginResult(true);
+            String userid=request.getUsername();
+            response.setUserId(userid);
+            System.out.println(request.getUsername()+"登录成功");
+            SessionUtil.bindSession(new Session(userid,request.getUsername()),ctx.channel());
+        }else {
+            response.setReason("账号密码匹配失败");
+            response.setLoginResult(false);
+            System.out.println(request.getUsername()+"登录失败");
         }
-        ctx.channel().writeAndFlush(loginResponsePacket);
+        ctx.channel().writeAndFlush(response);
+    }
+    //用户掉线取消绑定
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        SessionUtil.unBindSession(ctx.channel());
     }
 
-    private boolean valid(LoginRequestPacket loginRequestPacket) {
+    public boolean vaild(One2One_LoginRequest request){
         return true;
     }
 }

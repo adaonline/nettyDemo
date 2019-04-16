@@ -4,6 +4,11 @@ public class Session {
     public String userId;
     public String userName;
 
+    public Session(String userId, String userName) {
+        this.userId = userId;
+        this.userName = userName;
+    }
+
     public String getUserId() {
         return userId;
     }
